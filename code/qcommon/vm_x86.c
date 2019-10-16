@@ -51,7 +51,7 @@ static	int		pc = 0;
 
 static	int		*instructionPointers = NULL;
 
-#define FTOL_PTR
+//#define FTOL_PTR
 
 #ifdef _WIN32
 
@@ -61,7 +61,7 @@ static	int		ftolPtr = (int)_ftol;
 #endif
 
 void AsmCall( void );
-static	int		asmCallPtr = (int)AsmCall;
+//static	int		asmCallPtr = (int)AsmCall;
 
 #else // _WIN32
 
@@ -84,7 +84,7 @@ static	int		asmCallPtr = (int)doAsmCall;
 #endif // !_WIN32
 
 
-static	int		callMask = 0; // bk001213 - init
+static	volatile int		callMask = 0; // bk001213 - init
 
 static	int	instruction, pass;
 static	int	lastConst = 0;
@@ -567,6 +567,7 @@ void VM_Compile( vm_t *vm, vmHeader_t *header ) {
 			Emit4( pc );
 			EmitString( "FF 15" );		// call asmCallPtr
 			Emit4( (int)&asmCallPtr );
+			//Emit4((int) &doAsmCall);
 			break;
 		case OP_PUSH:
 			EmitAddEDI4(vm);

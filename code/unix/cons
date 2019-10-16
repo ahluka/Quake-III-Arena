@@ -715,7 +715,7 @@ sub main::doscripts {
 		$file = $path;
 	    }
 	    # Actually process the Conscript file.
-	    do $file;
+	    do "$ENV{PWD}" . $file;
 	    # Save any variables defined by the Conscript file
 	    # so we can restore them later, if needed;
 	    # then delete them from the script:: namespace.

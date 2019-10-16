@@ -111,7 +111,7 @@ ifeq ($(PLATFORM),linux)
 
   # bk001205: no mo'  -I/usr/include/glide, no FX
   # bk001205: no mo'  -Dstricmp=strcasecmp, see q_shared.h
-  BASE_CFLAGS =  -pipe -fsigned-char
+  BASE_CFLAGS =  -pipe -fsigned-char -m32
   # rcg010216: DLL_ONLY for PPC
   ifeq ($(strip $(DLL_ONLY)),true)
     BASE_CFLAGS += -DDLL_ONLY
@@ -125,7 +125,7 @@ ifeq ($(PLATFORM),linux)
   # bk001205 - took out -O to get assertions (NDEBUG)
   # bk001206 - MALLOC_CHECK in addition to ZONE_DEBUG
   # TTimo 03/30/2001 temporary took out -Werror for initial merge
-  DEBUG_CFLAGS = $(BASE_CFLAGS) -g  -Wall -Werror
+  DEBUG_CFLAGS = $(BASE_CFLAGS) -g  -w
   DEBUG_CFLAGS += -DNO_MOUSEGRAB
   DEBUG_CFLAGS += -O
 #  DEBUG_CFLAGS=$(BASE_CFLAGS) -g  -Wall -O
@@ -162,7 +162,7 @@ ifeq ($(PLATFORM),linux)
   RANLIB=ranlib
 
   THREAD_LDFLAGS=-lpthread
-  LDFLAGS=-ldl -lm
+  LDFLAGS=-ldl -lm -m32
   GLLDFLAGS=-L/usr/X11R6/lib -lX11 -lXext -lXxf86dga -lXxf86vm
 
   ifeq ($(ARCH),axp)
@@ -214,7 +214,7 @@ BASE_CFLAGS =  -pipe
 
 GL_CFLAGS = -I$(MESADIR)/include -I/usr/X11R6/include
 
-DEBUG_CFLAGS=$(BASE_CFLAGS) -g  -Wall -Werror
+DEBUG_CFLAGS=$(BASE_CFLAGS) -g  -w
 ifeq ($(ARCH),axp)
 CC=pgcc
 RELEASE_CFLAGS=$(BASE_CFLAGS) -DNDEBUG -O6 -ffast-math -funroll-loops -fomit-frame-pointer -fexpensive-optimizations
@@ -516,19 +516,19 @@ Q3OBJ = \
 	$(B)/client/unix_net.o \
 	$(B)/client/unix_shared.o \
 	\
-	$(B)/client/ahoptim.o  \
-	$(B)/client/autohint.o \
-	$(B)/client/ftbase.o   \
-	$(B)/client/ftdebug.o  \
-	$(B)/client/ftglyph.o  \
-	$(B)/client/ftinit.o   \
-	$(B)/client/ftmm.o     \
-	$(B)/client/ftsystem.o \
-	$(B)/client/raster1.o  \
-	$(B)/client/sfnt.o     \
-	$(B)/client/sfobjs.o   \
-	$(B)/client/smooth.o   \
-	$(B)/client/truetype.o
+#	$(B)/client/ahoptim.o  \
+#	$(B)/client/autohint.o \
+#	$(B)/client/ftbase.o   \
+#	$(B)/client/ftdebug.o  \
+#	$(B)/client/ftglyph.o  \
+#	$(B)/client/ftinit.o   \
+#	$(B)/client/ftmm.o     \
+#	$(B)/client/ftsystem.o \
+#	$(B)/client/raster1.o  \
+#	$(B)/client/sfnt.o     \
+#	$(B)/client/sfobjs.o   \
+#	$(B)/client/smooth.o   \
+#	$(B)/client/truetype.o
 #	\
 #	$(B)/client/q_parse.o \
 #	$(B)/client/math_quaternion.o \
@@ -580,6 +580,7 @@ else
 		$(B)/client/linux_glimp.o \
 		$(B)/client/linux_joystick.o \
 		$(B)/client/linux_snd.o \
+		$(B)/client/linux_signals.o \
 		$(B)/client/snd_mixa.o \
 		$(B)/client/matha.o \
 
@@ -589,6 +590,7 @@ else
 		$(B)/client/linux_glimp_smp.o \
 		$(B)/client/linux_joystick.o \
 		$(B)/client/linux_snd.o \
+		$(B)/client/linux_signals.o \
 		$(B)/client/snd_mixa.o \
 		$(B)/client/matha.o
 
@@ -758,6 +760,7 @@ $(B)/client/linux_joystick.o : $(UDIR)/linux_joystick.c; $(DO_CC)
 $(B)/client/linux_qgl.o : $(UDIR)/linux_qgl.c; $(DO_CC)  $(GL_CFLAGS) 
 $(B)/client/linux_input.o : $(UDIR)/linux_input.c; $(DO_CC) 
 $(B)/client/linux_snd.o : $(UDIR)/linux_snd.c; $(DO_CC) 
+$(B)/client/linux_signals.o : $(UDIR)/linux_signals.c; $(DO_CC) 
 $(B)/client/snd_mixa.o : $(UDIR)/snd_mixa.s; $(DO_AS) 
 $(B)/client/matha.o : $(UDIR)/matha.s; $(DO_AS) 
 
@@ -909,6 +912,8 @@ Q3DOBJ = \
 	$(B)/ded/l_struct.o \
 	\
 	$(B)/ded/linux_common.o \
+	$(B)/ded/linux_glimp.o \
+	$(B)/ded/linux_signals.o \
 	$(B)/ded/unix_main.o \
 	$(B)/ded/unix_net.o \
 	$(B)/ded/unix_shared.o \
@@ -984,7 +989,9 @@ $(B)/ded/l_precomp.o : $(BLIBDIR)/l_precomp.c; $(DO_BOT_CC)
 $(B)/ded/l_script.o : $(BLIBDIR)/l_script.c; $(DO_BOT_CC) 
 $(B)/ded/l_struct.o : $(BLIBDIR)/l_struct.c; $(DO_BOT_CC) 
 
-$(B)/ded/linux_common.o : $(UDIR)/linux_common.c; $(DO_CC)
+$(B)/ded/linux_common.o : $(UDIR)/linux_common.c; $(DO_CC) 
+$(B)/ded/linux_glimp.o : $(UDIR)/linux_glimp.c; $(DO_CC) 
+$(B)/ded/linux_signals.o : $(UDIR)/linux_signals.c; $(DO_CC) 
 $(B)/ded/unix_main.o : $(UDIR)/unix_main.c; $(DO_DED_CC) 
 $(B)/ded/unix_net.o : $(UDIR)/unix_net.c; $(DO_DED_CC) 
 $(B)/ded/unix_shared.o : $(UDIR)/unix_shared.c; $(DO_DED_CC) 

@@ -731,7 +731,8 @@ void *Sys_LoadDll( const char *name, char *fqpath ,
 #elif defined __mips__
   snprintf (fname, sizeof(fname), "%smips.so", name);
 #else
-#error Unknown arch
+//error Unknown arch
+  snprintf (fname, sizeof(fname), "%si386.so", name);
 #endif
 
 // bk001129 - was RTLD_LAZY 

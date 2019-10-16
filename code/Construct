@@ -14,7 +14,7 @@
 
 # source the compiler version utility
 BEGIN {
-  push @INC, './unix';
+  push @INC, '.';
 }
 use Cons_gcc;
 
